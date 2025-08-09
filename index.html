@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taste Ranking - Culinary Experience Tracker</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        /* CSS Variables - Restaurant Theme */
+        :root {
+            --bg-primary: #1a1611;
+            --bg-secondary: #2d2419;
+            --bg-glass: rgba(45, 36, 25, 0.4);
+            --text-primary: #f8f6f0;
+            --text-secondary: #c4b5a0;
+            --gold: #d4af37;
+            --copper: #b87333;
+            --burgundy: #800020;
+            --forest: #355e3b;
+            --cream: #f5f5dc;
+            --orange: #ff6b35;
+            --wine: #722f37;
+            --olive: #808000;
+            --danger: #dc3545;
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--wine) 30%, var(--bg-secondary) 70%, var(--bg-primary) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background - Restaurant Theme */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(184, 115, 51, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(128, 0, 32, 0.06) 0%, transparent 50%);
+            animation: floatBackground 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(45deg, transparent 30%, rgba(212, 175, 55, 0.02) 50%, transparent 70%),
+                linear-gradient(-45deg, transparent 30%, rgba(184, 115, 51, 0.02) 50%, transparent 70%);
+            animation: shimmer 15s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        /* Animaciones */
+        @keyframes floatBackground {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(30px, -30px); }
+            66% { transform: translate(-20px, 20px); }
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.02); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.6), 0 0 60px rgba(184, 115, 51, 0.3); }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Navbar - Restaurant Style */
+        .navbar {
+            background: rgba(26, 22, 17, 0.95) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+            animation: slideInUp 0.8s ease-out;
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+
+        /* Glass Effect Cards - Restaurant Theme */
+        .glass-card {
+            background: var(--bg-glass) !important;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.2) !important;
+            border-radius: 1.5rem !important;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(212, 175, 55, 0.1);
+            transition: all 0.3s ease;
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(212, 175, 55, 0.3);
+            border-color: rgba(212, 175, 55, 0.4) !important;
+        }
+
+        .glass-card-special {
+            background: rgba(128, 0, 32, 0.15) !important;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.4) !important;
+            border-radius: 1.5rem !important;
+            box-shadow: 
+                0 8px 32px rgba(128, 0, 32, 0.3),
+                inset 0 1px 0 rgba(212, 175, 55, 0.2);
+        }
+
+        /* Stats Cards - Restaurant Theme */
+        .stats-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            animation: bounceIn 0.8s ease-out;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        .stats-number {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            text-shadow: 0 0 20px currentColor;
+        }
+
+        /* Navigation Pills - Restaurant Style */
+        .glass-nav {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 1.5rem;
+            padding: 0.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            animation: slideInUp 0.7s ease-out;
+        }
+
+        .glass-nav .nav-link {
+            color: var(--text-secondary);
+            border-radius: 1rem;
+            transition: all 0.4s ease;
+            font-size: 0.875rem;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-nav .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .glass-nav .nav-link:hover::before {
+            left: 100%;
+        }
+
+        .glass-nav .nav-link.active {
+            background: linear-gradient(135deg, var(--gold), var(--copper));
+            color: var(--bg-primary);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            transform: translateY(-2px);
+            font-weight: 600;
+        }
+
+        /* Form Controls - Restaurant Theme */
+        .glass-select, .glass-input {
+            background: rgba(26, 22, 17, 0.7) !important;
+            border: 1px solid rgba(212, 175, 55, 0.3) !important;
+            color: var(--text-primary) !important;
+            border-radius: 1rem !important;
+            padding: 0.75rem 1rem !important;
+            font-size: 1rem !important;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .glass-select:focus, .glass-input:focus {
+            background: rgba(26, 22, 17, 0.9) !important;
+            border-color: var(--gold) !important;
+            box-shadow: 
+                0 0 0 0.2rem rgba(212, 175, 55, 0.25) !important,
+                inset 0 2px 4px rgba(0, 0, 0, 0.2),
+                0 0 20px rgba(212, 175, 55, 0.3) !important;
+            color: var(--text-primary) !important;
+            transform: translateY(-2px);
+        }
+
+        .glass-select option {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        /* User Selection Buttons - Chef Theme */
+        .btn-user {
+            background: rgba(45, 36, 25, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--text-secondary);
+            border-radius: 1rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-user::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-user:hover::before {
+            left: 100%;
+        }
+
+        .btn-user:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-user.active[data-user="pamolita"] {
+            background: linear-gradient(135deg, var(--burgundy), var(--wine));
+            border-color: var(--burgundy);
+            color: var(--cream);
+            box-shadow: 0 4px 15px rgba(128, 0, 32, 0.4);
+        }
+
+        .btn-user.active[data-user="ramiro"] {
+            background: linear-gradient(135deg, var(--forest), var(--olive));
+            border-color: var(--forest);
+            color: var(--cream);
+            box-shadow: 0 4px 15px rgba(53, 94, 59, 0.4);
+        }
+
+        .user-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        /* Rating Grid - Food Theme */
+        .rating-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 0.4rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .btn-rating {
+            background: rgba(45, 36, 25, 0.7);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--text-secondary);
+            border-radius: 0.75rem;
+            padding: 0.75rem 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            aspect-ratio: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-rating::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.3) 0%, transparent 70%);
+            transition: all 0.3s ease;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+        }
+
+        .btn-rating:hover::before {
+            width: 100px;
+            height: 100px;
+        }
+
+        .btn-rating:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            border-color: rgba(212, 175, 55, 0.5);
+            color: var(--text-primary);
+        }
+
+        .rating-grid[data-category="entrada"] .btn-rating.active {
+            background: linear-gradient(135deg, var(--forest), #2d5a2d);
+            border-color: var(--forest);
+            color: var(--cream);
+            box-shadow: 0 4px 15px rgba(53, 94, 59, 0.4);
+        }
+
+        .rating-grid[data-category="main"] .btn-rating.active {
+            background: linear-gradient(135deg, var(--orange), #e55a2b);
+            border-color: var(--orange);
+            color: var(--cream);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .rating-grid[data-category="dessert"] .btn-rating.active {
+            background: linear-gradient(135deg, var(--burgundy), var(--wine));
+            border-color: var(--burgundy);
+            color: var(--cream);
+            box-shadow: 0 4px 15px rgba(128, 0, 32, 0.4);
+        }
+
+        /* Gradient Elements - Restaurant Theme */
+        .gradient-text {
+            background: linear-gradient(135deg, var(--gold), var(--copper), var(--burgundy));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Playfair Display', serif;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, var(--gold), var(--copper));
+            border: none;
+            color: var(--bg-primary);
+            font-weight: 600;
+            border-radius: 1rem;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-gradient:hover::before {
+            left: 100%;
+        }
+
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #c19b26, #a66829);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.6);
+            color: var(--bg-primary);
+        }
+
+        .btn-gradient:disabled {
+            background: rgba(196, 181, 160, 0.3);
+            color: rgba(248, 246, 240, 0.5);
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* Action Buttons - Edit/Delete */
+        .btn-action {
+            background: rgba(45, 36, 25, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--text-secondary);
+            border-radius: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+            margin: 0 0.125rem;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-edit:hover {
+            background: linear-gradient(135deg, var(--gold), var(--copper));
+            border-color: var(--gold);
+            color: var(--bg-primary);
+        }
+
+        .btn-delete:hover {
+            background: linear-gradient(135deg, var(--danger), #b02a37);
+            border-color: var(--danger);
+            color: white;
+        }
+
+        /* Color Classes - Restaurant Theme */
+        .text-gold { color: var(--gold) !important; }
+        .text-copper { color: var(--copper) !important; }
+        .text-burgundy { color: var(--burgundy) !important; }
+        .text-forest { color: var(--forest) !important; }
+        .text-orange { color: var(--orange) !important; }
+
+        .bg-gold { background-color: var(--gold) !important; }
+        .bg-copper { background-color: var(--copper) !important; }
+        .bg-burgundy { background-color: var(--burgundy) !important; }
+
+        /* Gradient Badges - Food Theme */
+        .bg-gradient-appetizer {
+            background: linear-gradient(135deg, var(--forest), #2d5a2d) !important;
+            box-shadow: 0 0 15px rgba(53, 94, 59, 0.4);
+        }
+
+        .bg-gradient-main {
+            background: linear-gradient(135deg, var(--orange), #e55a2b) !important;
+            box-shadow: 0 0 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .bg-gradient-dessert {
+            background: linear-gradient(135deg, var(--burgundy), var(--wine)) !important;
+            box-shadow: 0 0 15px rgba(128, 0, 32, 0.4);
+        }
+
+        .bg-gradient-gold {
+            background: linear-gradient(135deg, var(--gold), var(--copper)) !important;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Ranking Cards - Restaurant Theme */
+        .ranking-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.4s ease;
+            animation: slideInUp 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ranking-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.05), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .ranking-card:hover::before {
+            left: 100%;
+        }
+
+        .ranking-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .ranking-card.pamolita {
+            border-color: rgba(128, 0, 32, 0.4);
+            background: rgba(128, 0, 32, 0.08);
+            box-shadow: 0 8px 32px rgba(128, 0, 32, 0.2);
+        }
+
+        .ranking-card.ramiro {
+            border-color: rgba(53, 94, 59, 0.4);
+            background: rgba(53, 94, 59, 0.08);
+            box-shadow: 0 8px 32px rgba(53, 94, 59, 0.2);
+        }
+
+        .ranking-card.global {
+            border-color: rgba(212, 175, 55, 0.4);
+            background: rgba(212, 175, 55, 0.08);
+            box-shadow: 0 8px 32px rgba(212, 175, 55, 0.2);
+        }
+
+        /* Toast Notifications - Restaurant Theme */
+        .toast-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 300px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(53, 94, 59, 0.4);
+            border-radius: 1rem;
+            color: var(--text-primary);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            animation: slideInRight 0.5s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Modal Styles */
+        .modal-content {
+            background: var(--bg-glass) !important;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.3) !important;
+            border-radius: 1.5rem !important;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2) !important;
+        }
+
+        .modal-footer {
+            border-top: 1px solid rgba(212, 175, 55, 0.2) !important;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 576px) {
+            .rating-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 0.5rem;
+            }
+            
+            .btn-rating {
+                padding: 1rem 0.5rem;
+                font-size: 1rem;
+            }
+            
+            .display-4 {
+                font-size: 2.5rem !important;
+            }
+
+            .glass-card {
+                border-radius: 1rem !important;
+            }
+
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+
+            .btn-action {
+                font-size: 0.7rem;
+                padding: 0.25rem 0.5rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* Scrollbar - Restaurant Theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(45, 36, 25, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--gold), var(--copper));
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #c19b26, #a66829);
+        }
+
+        /* Animaciones suaves */
+        .animate-bounce-slow {
+            animation: bounceVertical 3s ease-in-out infinite;
+        }
+
+        @keyframes bounceVertical {
+            0%, 20%, 53%, 80%, 100% {
+                transform: translate3d(0,0,0);
+            }
+            40%, 43% {
+                transform: translate3d(0, -10px, 0);
+            }
+            70% {
+                transform: translate3d(0, -5px, 0);
+            }
+            90% {
+                transform: translate3d(0, -2px, 0);
+            }
+        }
+
+        .static-title {
+            transform: none !important;
+            animation: none !important;
+        }
+    </style>
+</head>
+<body class="loading">
+    <!-- Header -->
+    <nav class="navbar navbar-dark sticky-top">
+        <div class="container-fluid justify-content-center">
+            <div class="navbar-brand d-flex align-items-center static-title">
+                <i class="bi bi-award me-2 text-gold"></i>
+                <span class="gradient-text fw-bold fs-2 static-title">TASTE RANKING</span>
+            </div>
+            <p class="text-muted mb-0 small">Culinary Experience Tracker • Pamolita vs Ramiro</p>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-3 py-4">
+        <!-- Stats Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-6">
+                <div class="stats-card text-center p-4">
+                    <div class="stats-number fs-2 fw-bold text-gold" id="totalRestaurants">20</div>
+                    <div class="small text-muted">Restaurants</div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="stats-card text-center p-4">
+                    <div class="stats-number fs-2 fw-bold text-copper" id="totalRated">0</div>
+                    <div class="small text-muted">Reviewed</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-pills nav-fill mb-4 glass-nav" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="rate-tab" data-bs-toggle="pill" data-bs-target="#rate" type="button" role="tab">
+                    <i class="bi bi-star-fill me-1"></i>Review
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pamolita-tab" data-bs-toggle="pill" data-bs-target="#pamolita" type="button" role="tab">
+                    <i class="bi bi-person-heart me-1"></i>Pamolita
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="ramiro-tab" data-bs-toggle="pill" data-bs-target="#ramiro" type="button" role="tab">
+                    <i class="bi bi-person-check me-1"></i>Ramiro
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="global-tab" data-bs-toggle="pill" data-bs-target="#global" type="button" role="tab">
+                    <i class="bi bi-trophy-fill me-1"></i>Rankings
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="mainTabContent">
+            <!-- Rating Tab -->
+            <div class="tab-pane fade show active" id="rate" role="tabpanel">
+                <!-- User Selection -->
+                <div class="card glass-card mb-4">
+                    <div class="card-body">
+                        <label class="form-label text-light small mb-3 d-block">
+                            <i class="bi bi-person-badge me-2"></i>Select Reviewer
+                        </label>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <button class="btn btn-user w-100 py-3 active" data-user="pamolita" id="btn-pamolita">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <div class="user-dot bg-burgundy me-2"></div>
+                                        👩‍🍳 Pamolita
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-user w-100 py-3" data-user="ramiro" id="btn-ramiro">
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <div class="user-dot bg-forest me-2"></div>
+                                        👨‍🍳 Ramiro
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Restaurant Selection -->
+                <div class="card glass-card mb-4">
+                    <div class="card-body">
+                        <label class="form-label text-light small mb-3 d-block">
+                            <i class="bi bi-shop me-2"></i>Select Restaurant
+                        </label>
+                        <select class="form-select glass-select" id="restaurantSelect">
+                            <option value="">Choose restaurant to review...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Rating Controls -->
+                <div class="card glass-card mb-4">
+                    <div class="card-body">
+                        <!-- Entrada -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <label class="form-label text-light small mb-0">
+                                    <span class="me-2">🥗</span>Appetizers & Starters
+                                </label>
+                                <span class="badge bg-gradient-appetizer px-3 py-2" id="entradaValue">1</span>
+                            </div>
+                            <div class="rating-grid" data-category="entrada">
+                                <button class="btn btn-rating active" data-value="1">1</button>
+                                <button class="btn btn-rating" data-value="2">2</button>
+                                <button class="btn btn-rating" data-value="3">3</button>
+                                <button class="btn btn-rating" data-value="4">4</button>
+                                <button class="btn btn-rating" data-value="5">5</button>
+                                <button class="btn btn-rating" data-value="6">6</button>
+                                <button class="btn btn-rating" data-value="7">7</button>
+                                <button class="btn btn-rating" data-value="8">8</button>
+                                <button class="btn btn-rating" data-value="9">9</button>
+                                <button class="btn btn-rating" data-value="10">10</button>
+                            </div>
+                        </div>
+
+                        <!-- Main Course -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <label class="form-label text-light small mb-0">
+                                    <span class="me-2">🍖</span>Main Courses
+                                </label>
+                                <span class="badge bg-gradient-main px-3 py-2" id="mainValue">1</span>
+                            </div>
+                            <div class="rating-grid" data-category="main">
+                                <button class="btn btn-rating active" data-value="1">1</button>
+                                <button class="btn btn-rating" data-value="2">2</button>
+                                <button class="btn btn-rating" data-value="3">3</button>
+                                <button class="btn btn-rating" data-value="4">4</button>
+                                <button class="btn btn-rating" data-value="5">5</button>
+                                <button class="btn btn-rating" data-value="6">6</button>
+                                <button class="btn btn-rating" data-value="7">7</button>
+                                <button class="btn btn-rating" data-value="8">8</button>
+                                <button class="btn btn-rating" data-value="9">9</button>
+                                <button class="btn btn-rating" data-value="10">10</button>
+                            </div>
+                        </div>
+
+                        <!-- Dessert -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <label class="form-label text-light small mb-0">
+                                    <span class="me-2">🍰</span>Desserts & Sweets
+                                </label>
+                                <span class="badge bg-gradient-dessert px-3 py-2" id="dessertValue">1</span>
+                            </div>
+                            <div class="rating-grid" data-category="dessert">
+                                <button class="btn btn-rating active" data-value="1">1</button>
+                                <button class="btn btn-rating" data-value="2">2</button>
+                                <button class="btn btn-rating" data-value="3">3</button>
+                                <button class="btn btn-rating" data-value="4">4</button>
+                                <button class="btn btn-rating" data-value="5">5</button>
+                                <button class="btn btn-rating" data-value="6">6</button>
+                                <button class="btn btn-rating" data-value="7">7</button>
+                                <button class="btn btn-rating" data-value="8">8</button>
+                                <button class="btn btn-rating" data-value="9">9</button>
+                                <button class="btn btn-rating" data-value="10">10</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Average Display -->
+                <div class="card glass-card-special mb-4">
+                    <div class="card-body text-center py-4">
+                        <div class="small text-muted mb-2">
+                            <i class="bi bi-calculator me-2"></i>Overall Rating
+                        </div>
+                        <div class="display-4 fw-bold gradient-text mb-3 static-title" id="averageScore">1.0</div>
+                        <button class="btn btn-gradient w-100 py-3" id="saveRating" disabled>
+                            <i class="bi bi-bookmark-plus me-2"></i><span id="saveButtonText">Save Review</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Add Restaurant -->
+                <button class="btn btn-outline-light w-100 py-3 mb-3" id="toggleAddForm">
+                    <i class="bi bi-plus-circle me-2"></i>Add New Restaurant
+                </button>
+
+                <div class="card glass-card d-none" id="addRestaurantForm">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <input type="text" class="form-control glass-input" id="newRestaurantName" placeholder="Enter restaurant name...">
+                        </div>
+                        <button class="btn btn-gradient w-100 py-3" id="addRestaurant">
+                            <i class="bi bi-shop-window me-2"></i>Add Restaurant
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pamolita Tab -->
+            <div class="tab-pane fade" id="pamolita" role="tabpanel">
+                <div class="text-center mb-4">
+                    <h3 class="text-burgundy d-flex align-items-center justify-content-center static-title">
+                        <div class="user-dot bg-burgundy me-2"></div>
+                        👩‍🍳 Pamolita's Reviews
+                    </h3>
+                </div>
+                <div id="pamolitaRankings"></div>
+            </div>
+
+            <!-- Ramiro Tab -->
+            <div class="tab-pane fade" id="ramiro" role="tabpanel">
+                <div class="text-center mb-4">
+                    <h3 class="text-forest d-flex align-items-center justify-content-center static-title">
+                        <div class="user-dot bg-forest me-2"></div>
+                        👨‍🍳 Ramiro's Reviews
+                    </h3>
+                </div>
+                <div id="ramiroRankings"></div>
+            </div>
+
+            <!-- Global Tab -->
+            <div class="tab-pane fade" id="global" role="tabpanel">
+                <div class="text-center mb-4">
+                    <h3 class="text-gold d-flex align-items-center justify-content-center static-title">
+                        <i class="bi bi-trophy-fill me-2 animate-bounce-slow"></i>
+                        Overall Restaurant Rankings
+                    </h3>
+                </div>
+                <div id="globalRankings"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Rating Modal -->
+    <div class="modal fade" id="editRatingModal" tabindex="-1" aria-labelledby="editRatingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-gold" id="editRatingModalLabel">
+                        <i class="bi bi-pencil-square me-2"></i>Edit Review
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-4">
+                        <h6 class="text-light mb-3">
+                            <i class="bi bi-shop me-2"></i>Restaurant: <span id="editRestaurantName" class="text-gold"></span>
+                        </h6>
+                        <h6 class="text-light mb-3">
+                            <i class="bi bi-person-badge me-2"></i>Reviewer: <span id="editReviewerName" class="text-copper"></span>
+                        </h6>
+                    </div>
+
+                    <!-- Edit Entrada -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <label class="form-label text-light small mb-0">
+                                <span class="me-2">🥗</span>Appetizers & Starters
+                            </label>
+                            <span class="badge bg-gradient-appetizer px-3 py-2" id="editEntradaValue">1</span>
+                        </div>
+                        <div class="rating-grid" data-category="entrada" id="editEntradaGrid">
+                            <button class="btn btn-rating" data-value="1">1</button>
+                            <button class="btn btn-rating" data-value="2">2</button>
+                            <button class="btn btn-rating" data-value="3">3</button>
+                            <button class="btn btn-rating" data-value="4">4</button>
+                            <button class="btn btn-rating" data-value="5">5</button>
+                            <button class="btn btn-rating" data-value="6">6</button>
+                            <button class="btn btn-rating" data-value="7">7</button>
+                            <button class="btn btn-rating" data-value="8">8</button>
+                            <button class="btn btn-rating" data-value="9">9</button>
+                            <button class="btn btn-rating" data-value="10">10</button>
+                        </div>
+                    </div>
+
+                    <!-- Edit Main -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <label class="form-label text-light small mb-0">
+                                <span class="me-2">🍖</span>Main Courses
+                            </label>
+                            <span class="badge bg-gradient-main px-3 py-2" id="editMainValue">1</span>
+                        </div>
+                        <div class="rating-grid" data-category="main" id="editMainGrid">
+                            <button class="btn btn-rating" data-value="1">1</button>
+                            <button class="btn btn-rating" data-value="2">2</button>
+                            <button class="btn btn-rating" data-value="3">3</button>
+                            <button class="btn btn-rating" data-value="4">4</button>
+                            <button class="btn btn-rating" data-value="5">5</button>
+                            <button class="btn btn-rating" data-value="6">6</button>
+                            <button class="btn btn-rating" data-value="7">7</button>
+                            <button class="btn btn-rating" data-value="8">8</button>
+                            <button class="btn btn-rating" data-value="9">9</button>
+                            <button class="btn btn-rating" data-value="10">10</button>
+                        </div>
+                    </div>
+
+                    <!-- Edit Dessert -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <label class="form-label text-light small mb-0">
+                                <span class="me-2">🍰</span>Desserts & Sweets
+                            </label>
+                            <span class="badge bg-gradient-dessert px-3 py-2" id="editDessertValue">1</span>
+                        </div>
+                        <div class="rating-grid" data-category="dessert" id="editDessertGrid">
+                            <button class="btn btn-rating" data-value="1">1</button>
+                            <button class="btn btn-rating" data-value="2">2</button>
+                            <button class="btn btn-rating" data-value="3">3</button>
+                            <button class="btn btn-rating" data-value="4">4</button>
+                            <button class="btn btn-rating" data-value="5">5</button>
+                            <button class="btn btn-rating" data-value="6">6</button>
+                            <button class="btn btn-rating" data-value="7">7</button>
+                            <button class="btn btn-rating" data-value="8">8</button>
+                            <button class="btn btn-rating" data-value="9">9</button>
+                            <button class="btn btn-rating" data-value="10">10</button>
+                        </div>
+                    </div>
+
+                    <!-- Edit Average Display -->
+                    <div class="text-center p-3 rounded" style="background: rgba(128, 0, 32, 0.15);">
+                        <div class="small text-muted mb-2">
+                            <i class="bi bi-calculator me-2"></i>New Overall Rating
+                        </div>
+                        <div class="fs-2 fw-bold gradient-text" id="editAverageScore">1.0</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>Cancel
+                    </button>
+                    <button type="button" class="btn btn-gradient" id="saveEditedRating">
+                        <i class="bi bi-check-circle me-2"></i>Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteRatingModal" tabindex="-1" aria-labelledby="deleteRatingModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger" id="deleteRatingModalLabel">
+                        <i class="bi bi-exclamation-triangle me-2"></i>Delete Review
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-light">Are you sure you want to delete this review?</p>
+                    <div class="p-3 rounded" style="background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.3);">
+                        <strong class="text-gold" id="deleteRestaurantName"></strong><br>
+                        <small class="text-muted">Reviewer: <span id="deleteReviewerName"></span></small>
+                    </div>
+                    <p class="text-warning mt-3 small">
+                        <i class="bi bi-info-circle me-2"></i>This action cannot be undone.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-2"></i>Cancel
+                    </button>
+                    <button type="button" class="btn btn-outline-danger" id="confirmDeleteRating">
+                        <i class="bi bi-trash me-2"></i>Delete Review
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Initial data
+        const initialRestaurants = [
+            "Evelia", "Rufino", "Tony wu", "Acido", "Mengano", "Niño gordo", 
+            "Anafe", "Bis bristo", "Ajo negro", "Aramburu", "Uddo", "Kuro Neko",
+            "Crizia", "Idilio", "Piedra pasillo", "Tigre morado", "Kefi", 
+            "Mess cocina", "Raggio", "Marta restaurante"
+        ];
+
+        // App state
+        let restaurants = [...initialRestaurants];
+        let ratings = JSON.parse(localStorage.getItem('restaurantRatings')) || {};
+        let selectedUser = 'pamolita';
+        let currentRating = {
+            restaurant: '',
+            entrada: 1,
+            main: 1,
+            dessert: 1
+        };
+        let editingRating = {
+            restaurant: '',
+            user: '',
+            entrada: 1,
+            main: 1,
+            dessert: 1
+        };
+        let isEditMode = false;
+
+        // DOM elements
+        const restaurantSelect = document.getElementById('restaurantSelect');
+        const userButtons = document.querySelectorAll('.btn-user');
+        const ratingGrids = document.querySelectorAll('.rating-grid');
+        const saveButton = document.getElementById('saveRating');
+        const saveButtonText = document.getElementById('saveButtonText');
+        const averageDisplay = document.getElementById('averageScore');
+        const addFormToggle = document.getElementById('toggleAddForm');
+        const addForm = document.getElementById('addRestaurantForm');
+        const newRestaurantInput = document.getElementById('newRestaurantName');
+        const addRestaurantBtn = document.getElementById('addRestaurant');
+
+        // Modal elements
+        const editModal = new bootstrap.Modal(document.getElementById('editRatingModal'));
+        const deleteModal = new bootstrap.Modal(document.getElementById('deleteRatingModal'));
+        const editRatingGrids = document.querySelectorAll('#editRatingModal .rating-grid');
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Remove loading class
+            document.body.classList.remove('loading');
+            
+            initializeRestaurantSelect();
+            setupEventListeners();
+            setupEditModalEventListeners();
+            updateStats();
+            updateAllRankings();
+            
+            // Add staggered animation to cards
+            const cards = document.querySelectorAll('.glass-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+
+        // Initialize restaurant select dropdown
+        function initializeRestaurantSelect() {
+            restaurantSelect.innerHTML = '<option value="">Choose restaurant to review...</option>';
+            restaurants.forEach(restaurant => {
+                const option = document.createElement('option');
+                option.value = restaurant;
+                option.textContent = restaurant;
+                restaurantSelect.appendChild(option);
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // User selection
+            userButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (isEditMode) {
+                        cancelEditMode();
+                    }
+                    userButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedUser = this.dataset.user;
+                    
+                    // Add click animation
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+
+            // Restaurant selection
+            restaurantSelect.addEventListener('change', function() {
+                if (isEditMode) {
+                    cancelEditMode();
+                }
+                currentRating.restaurant = this.value;
+                updateSaveButton();
+                
+                // Add selection animation
+                this.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+
+            // Rating grids
+            ratingGrids.forEach(grid => {
+                const category = grid.dataset.category;
+                const buttons = grid.querySelectorAll('.btn-rating');
+                
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const value = parseInt(this.dataset.value);
+                        
+                        // Update active state with animation
+                        buttons.forEach(b => {
+                            b.classList.remove('active');
+                            b.style.transform = '';
+                        });
+                        this.classList.add('active');
+                        this.style.transform = 'scale(1.1)';
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 200);
+                        
+                        // Update current rating
+                        currentRating[category] = value;
+                        
+                        // Update display with animation
+                        const valueDisplay = document.getElementById(category === 'entrada' ? 'entradaValue' : 
+                                                 category === 'main' ? 'mainValue' : 'dessertValue');
+                        valueDisplay.style.transform = 'scale(1.2)';
+                        valueDisplay.textContent = value;
+                        setTimeout(() => {
+                            valueDisplay.style.transform = '';
+                        }, 300);
+                        
+                        updateAverage();
+                    });
+                });
+            });
+
+            // Save rating
+            saveButton.addEventListener('click', saveRating);
+
+            // Add restaurant form
+            addFormToggle.addEventListener('click', function() {
+                addForm.classList.toggle('d-none');
+                const icon = this.querySelector('i');
+                if (addForm.classList.contains('d-none')) {
+                    icon.className = 'bi bi-plus-circle me-2';
+                    this.innerHTML = '<i class="bi bi-plus-circle me-2"></i>Add New Restaurant';
+                } else {
+                    icon.className = 'bi bi-x-circle me-2';
+                    this.innerHTML = '<i class="bi bi-x-circle me-2"></i>Cancel';
+                    // Focus input with delay for animation
+                    setTimeout(() => {
+                        newRestaurantInput.focus();
+                    }, 300);
+                }
+            });
+
+            addRestaurantBtn.addEventListener('click', addRestaurant);
+            
+            newRestaurantInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addRestaurant();
+                }
+            });
+        }
+
+        // Setup edit modal event listeners
+        function setupEditModalEventListeners() {
+            // Edit rating grids in modal
+            editRatingGrids.forEach(grid => {
+                const category = grid.dataset.category;
+                const buttons = grid.querySelectorAll('.btn-rating');
+                
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const value = parseInt(this.dataset.value);
+                        
+                        // Update active state with animation
+                        buttons.forEach(b => {
+                            b.classList.remove('active');
+                            b.style.transform = '';
+                        });
+                        this.classList.add('active');
+                        this.style.transform = 'scale(1.1)';
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 200);
+                        
+                        // Update editing rating
+                        editingRating[category] = value;
+                        
+                        // Update display with animation
+                        const valueDisplay = document.getElementById(category === 'entrada' ? 'editEntradaValue' : 
+                                                 category === 'main' ? 'editMainValue' : 'editDessertValue');
+                        valueDisplay.style.transform = 'scale(1.2)';
+                        valueDisplay.textContent = value;
+                        setTimeout(() => {
+                            valueDisplay.style.transform = '';
+                        }, 300);
+                        
+                        updateEditAverage();
+                    });
+                });
+            });
+
+            // Save edited rating
+            document.getElementById('saveEditedRating').addEventListener('click', saveEditedRating);
+
+            // Confirm delete rating
+            document.getElementById('confirmDeleteRating').addEventListener('click', confirmDeleteRating);
+        }
+
+        // Edit rating function
+        function editRating(restaurant, user) {
+            const rating = ratings[restaurant][user];
+            
+            editingRating = {
+                restaurant: restaurant,
+                user: user,
+                entrada: rating.entrada,
+                main: rating.main,
+                dessert: rating.dessert
+            };
+
+            // Update modal content
+            document.getElementById('editRestaurantName').textContent = restaurant;
+            document.getElementById('editReviewerName').textContent = user === 'pamolita' ? '👩‍🍳 Pamolita' : '👨‍🍳 Ramiro';
+
+            // Set active buttons in edit grids
+            editRatingGrids.forEach(grid => {
+                const category = grid.dataset.category;
+                const buttons = grid.querySelectorAll('.btn-rating');
+                const currentValue = editingRating[category];
+                
+                buttons.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (parseInt(btn.dataset.value) === currentValue) {
+                        btn.classList.add('active');
+                    }
+                });
+            });
+
+            // Update value displays
+            document.getElementById('editEntradaValue').textContent = rating.entrada;
+            document.getElementById('editMainValue').textContent = rating.main;
+            document.getElementById('editDessertValue').textContent = rating.dessert;
+            
+            updateEditAverage();
+            editModal.show();
+        }
+
+        // Delete rating function
+        function deleteRating(restaurant, user) {
+            document.getElementById('deleteRestaurantName').textContent = restaurant;
+            document.getElementById('deleteReviewerName').textContent = user === 'pamolita' ? '👩‍🍳 Pamolita' : '👨‍🍳 Ramiro';
+            
+            // Store data for deletion
+            editingRating = { restaurant, user };
+            deleteModal.show();
+        }
+
+        // Save edited rating
+        function saveEditedRating() {
+            const promedio = parseFloat(((editingRating.entrada + editingRating.main + editingRating.dessert) / 3).toFixed(1));
+            
+            ratings[editingRating.restaurant][editingRating.user] = {
+                entrada: editingRating.entrada,
+                main: editingRating.main,
+                dessert: editingRating.dessert,
+                promedio: promedio
+            };
+
+            // Save to localStorage
+            localStorage.setItem('restaurantRatings', JSON.stringify(ratings));
+
+            updateStats();
+            updateAllRankings();
+            editModal.hide();
+
+            showToast('Review updated successfully! ✏️', 'success');
+        }
+
+        // Confirm delete rating
+        function confirmDeleteRating() {
+            delete ratings[editingRating.restaurant][editingRating.user];
+            
+            // If no more ratings for this restaurant, remove it from ratings
+            if (Object.keys(ratings[editingRating.restaurant]).length === 0) {
+                delete ratings[editingRating.restaurant];
+            }
+
+            // Save to localStorage
+            localStorage.setItem('restaurantRatings', JSON.stringify(ratings));
+
+            updateStats();
+            updateAllRankings();
+            deleteModal.hide();
+
+            showToast('Review deleted successfully! 🗑️', 'success');
+        }
+
+        // Update edit average display
+        function updateEditAverage() {
+            const avg = ((editingRating.entrada + editingRating.main + editingRating.dessert) / 3).toFixed(1);
+            const editAverageDisplay = document.getElementById('editAverageScore');
+            editAverageDisplay.style.transform = 'scale(1.1)';
+            editAverageDisplay.textContent = avg;
+            setTimeout(() => {
+                editAverageDisplay.style.transform = '';
+            }, 300);
+        }
+
+        // Enter edit mode
+        function enterEditMode(restaurant, user) {
+            isEditMode = true;
+            const rating = ratings[restaurant][user];
+            
+            // Set form to edit mode
+            currentRating = {
+                restaurant: restaurant,
+                entrada: rating.entrada,
+                main: rating.main,
+                dessert: rating.dessert
+            };
+
+            // Update UI
+            restaurantSelect.value = restaurant;
+            userButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.user === user) {
+                    btn.classList.add('active');
+                }
+            });
+            selectedUser = user;
+
+            // Update rating grids
+            ratingGrids.forEach(grid => {
+                const category = grid.dataset.category;
+                const buttons = grid.querySelectorAll('.btn-rating');
+                const currentValue = currentRating[category];
+                
+                buttons.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (parseInt(btn.dataset.value) === currentValue) {
+                        btn.classList.add('active');
+                    }
+                });
+            });
+
+            // Update displays
+            document.getElementById('entradaValue').textContent = rating.entrada;
+            document.getElementById('mainValue').textContent = rating.main;
+            document.getElementById('dessertValue').textContent = rating.dessert;
+            updateAverage();
+            
+            // Update save button
+            saveButtonText.textContent = 'Update Review';
+            saveButton.disabled = false;
+
+            // Switch to rate tab
+            document.getElementById('rate-tab').click();
+
+            showToast('Edit mode activated! Make your changes and save. ✏️', 'info');
+        }
+
+        // Cancel edit mode
+        function cancelEditMode() {
+            isEditMode = false;
+            
+            // Reset form
+            currentRating = { restaurant: '', entrada: 1, main: 1, dessert: 1 };
+            restaurantSelect.value = '';
+            
+            // Reset rating grids
+            ratingGrids.forEach(grid => {
+                const buttons = grid.querySelectorAll('.btn-rating');
+                buttons.forEach((btn, index) => {
+                    btn.classList.remove('active');
+                    if (index === 0) btn.classList.add('active');
+                });
+            });
+            
+            // Reset displays
+            document.getElementById('entradaValue').textContent = '1';
+            document.getElementById('mainValue').textContent = '1';
+            document.getElementById('dessertValue').textContent = '1';
+            updateAverage();
+            
+            // Reset save button
+            saveButtonText.textContent = 'Save Review';
+            updateSaveButton();
+        }
+
+        // Update average display
+        function updateAverage() {
+            const avg = ((currentRating.entrada + currentRating.main + currentRating.dessert) / 3).toFixed(1);
+            averageDisplay.style.transform = 'scale(1.1)';
+            averageDisplay.textContent = avg;
+            setTimeout(() => {
+                averageDisplay.style.transform = '';
+            }, 300);
+        }
+
+        // Update save button state
+        function updateSaveButton() {
+            saveButton.disabled = !currentRating.restaurant;
+        }
+
+        // Save rating
+        function saveRating() {
+            if (!currentRating.restaurant) return;
+
+            const promedio = parseFloat(((currentRating.entrada + currentRating.main + currentRating.dessert) / 3).toFixed(1));
+            
+            if (!ratings[currentRating.restaurant]) {
+                ratings[currentRating.restaurant] = {};
+            }
+            
+            ratings[currentRating.restaurant][selectedUser] = {
+                entrada: currentRating.entrada,
+                main: currentRating.main,
+                dessert: currentRating.dessert,
+                promedio: promedio
+            };
+
+            // Save to localStorage
+            localStorage.setItem('restaurantRatings', JSON.stringify(ratings));
+
+            // Reset form with animations
+            currentRating = { restaurant: '', entrada: 1, main: 1, dessert: 1 };
+            restaurantSelect.value = '';
+            
+            // Reset rating buttons with staggered animation
+            ratingGrids.forEach((grid, gridIndex) => {
+                const buttons = grid.querySelectorAll('.btn-rating');
+                buttons.forEach((b, btnIndex) => {
+                    setTimeout(() => {
+                        b.classList.remove('active');
+                        if (btnIndex === 0) b.classList.add('active');
+                    }, gridIndex * 100 + btnIndex * 20);
+                });
+            });
+            
+            // Reset displays
+            document.getElementById('entradaValue').textContent = '1';
+            document.getElementById('mainValue').textContent = '1';
+            document.getElementById('dessertValue').textContent = '1';
+            updateAverage();
+            updateSaveButton();
+            updateStats();
+            updateAllRankings();
+
+            // Reset edit mode if active
+            if (isEditMode) {
+                isEditMode = false;
+                saveButtonText.textContent = 'Save Review';
+                showToast('Review updated successfully! ✏️', 'success');
+            } else {
+                showToast('Review saved successfully! 🍽️', 'success');
+            }
+            
+            // Add success animation to save button
+            saveButton.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                saveButton.style.transform = '';
+            }, 200);
+        }
+
+        // Add new restaurant
+        function addRestaurant() {
+            const name = newRestaurantInput.value.trim();
+            if (name && !restaurants.includes(name)) {
+                restaurants.push(name);
+                initializeRestaurantSelect();
+                newRestaurantInput.value = '';
+                addForm.classList.add('d-none');
+                addFormToggle.innerHTML = '<i class="bi bi-plus-circle me-2"></i>Add New Restaurant';
+                updateStats();
+                showToast('Restaurant added successfully! 🏪', 'success');
+                
+                // Add success animation
+                addRestaurantBtn.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    addRestaurantBtn.style.transform = '';
+                }, 200);
+            }
+        }
+
+        // Update stats with animation
+        function updateStats() {
+            const totalRestaurantsEl = document.getElementById('totalRestaurants');
+            const totalRatedEl = document.getElementById('totalRated');
+            
+            // Animate numbers
+            animateNumber(totalRestaurantsEl, restaurants.length);
+            animateNumber(totalRatedEl, Object.keys(ratings).length);
+        }
+
+        // Animate number changes
+        function animateNumber(element, targetNumber) {
+            const currentNumber = parseInt(element.textContent);
+            if (currentNumber !== targetNumber) {
+                element.style.transform = 'scale(1.2)';
+                element.textContent = targetNumber;
+                setTimeout(() => {
+                    element.style.transform = '';
+                }, 300);
+            }
+        }
+
+        // Update all rankings
+        function updateAllRankings() {
+            updateUserRanking('pamolita');
+            updateUserRanking('ramiro');
+            updateGlobalRanking();
+        }
+
+        // Update user ranking
+        function updateUserRanking(user) {
+            const container = document.getElementById(user + 'Rankings');
+            const userRatings = getRankedRestaurants(user);
+            
+            if (userRatings.length === 0) {
+                container.innerHTML = '<div class="text-center py-5 text-muted">No reviews yet. Start rating some restaurants! 🍽️</div>';
+                return;
+            }
+            
+            container.innerHTML = userRatings.map((restaurant, index) => {
+                const rating = ratings[restaurant][user];
+                const badgeClass = index < 3 ? 'bg-gradient-gold' : 'bg-secondary';
+                const cardClass = user === 'pamolita' ? 'pamolita' : 'ramiro';
+                
+                return `
+                    <div class="ranking-card ${cardClass}" style="animation-delay: ${index * 0.1}s">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge ${badgeClass} me-3 px-3 py-2 fw-bold">#${index + 1}</span>
+                                    <span class="fw-semibold text-light">${restaurant}</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-star-fill text-warning me-1"></i>
+                                    <span class="fw-bold fs-5 text-${user === 'pamolita' ? 'burgundy' : 'forest'}">${rating.promedio}</span>
+                                </div>
+                            </div>
+                            <div class="row g-2 mt-3 mb-3">
+                                <div class="col-4">
+                                    <div class="text-center p-2 rounded" style="background: rgba(53, 94, 59, 0.15);">
+                                        <div class="small text-muted">Appetizers</div>
+                                        <div class="text-forest fw-bold">${rating.entrada}</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="text-center p-2 rounded" style="background: rgba(255, 107, 53, 0.15);">
+                                        <div class="small text-muted">Main</div>
+                                        <div class="text-orange fw-bold">${rating.main}</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="text-center p-2 rounded" style="background: rgba(128, 0, 32, 0.15);">
+                                        <div class="small text-muted">Desserts</div>
+                                        <div class="text-burgundy fw-bold">${rating.dessert}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end gap-2">
+                                <button class="btn btn-action btn-edit" onclick="editRating('${restaurant}', '${user}')" title="Edit Review">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                                <button class="btn btn-action btn-edit" onclick="enterEditMode('${restaurant}', '${user}')" title="Quick Edit">
+                                    <i class="bi bi-arrow-up-circle"></i>
+                                </button>
+                                <button class="btn btn-action btn-delete" onclick="deleteRating('${restaurant}', '${user}')" title="Delete Review">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update global ranking
+        function updateGlobalRanking() {
+            const container = document.getElementById('globalRankings');
+            const globalRatings = getOverallRanking();
+            
+            if (globalRatings.length === 0) {
+                container.innerHTML = '<div class="text-center py-5 text-muted">No reviews yet. Start rating restaurants to see the rankings! 🏆</div>';
+                return;
+            }
+            
+            container.innerHTML = globalRatings.map((restaurant, index) => {
+                const badgeClass = index < 3 ? 'bg-gradient-gold' : 'bg-secondary';
+                
+                return `
+                    <div class="ranking-card global" style="animation-delay: ${index * 0.1}s">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge ${badgeClass} me-3 px-3 py-2 fw-bold">#${index + 1}</span>
+                                    <span class="fw-semibold text-light">${restaurant.name}</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-star-fill text-warning me-1"></i>
+                                    <span class="fw-bold fs-5 gradient-text">${restaurant.overall}</span>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center gap-4">
+                                ${restaurant.pamolitaRating > 0 ? `
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-dot bg-burgundy me-2"></div>
+                                        <span class="text-burgundy fw-bold">👩‍🍳 ${restaurant.pamolitaRating}</span>
+                                    </div>
+                                ` : ''}
+                                ${restaurant.ramiroRating > 0 ? `
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-dot bg-forest me-2"></div>
+                                        <span class="text-forest fw-bold">👨‍🍳 ${restaurant.ramiroRating}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Get ranked restaurants for user
+        function getRankedRestaurants(user) {
+            return restaurants
+                .filter(restaurant => ratings[restaurant] && ratings[restaurant][user])
+                .sort((a, b) => {
+                    const ratingA = ratings[a][user].promedio;
+                    const ratingB = ratings[b][user].promedio;
+                    return ratingB - ratingA;
+                });
+        }
+
+        // Get overall ranking
+        function getOverallRanking() {
+            return restaurants
+                .filter(restaurant => {
+                    const hasRatings = ratings[restaurant];
+                    return hasRatings && (hasRatings.pamolita || hasRatings.ramiro);
+                })
+                .map(restaurant => {
+                    const pamolitaRating = ratings[restaurant].pamolita?.promedio || 0;
+                    const ramiroRating = ratings[restaurant].ramiro?.promedio || 0;
+                    const count = (pamolitaRating > 0 ? 1 : 0) + (ramiroRating > 0 ? 1 : 0);
+                    const overall = count > 0 ? parseFloat(((pamolitaRating + ramiroRating) / count).toFixed(1)) : 0;
+                    
+                    return {
+                        name: restaurant,
+                        overall: overall,
+                        pamolitaRating: pamolitaRating,
+                        ramiroRating: ramiroRating
+                    };
+                })
+                .sort((a, b) => b.overall - a.overall);
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification p-3';
+            toast.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.style.animation = 'slideInRight 0.5s ease-out reverse';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 500);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

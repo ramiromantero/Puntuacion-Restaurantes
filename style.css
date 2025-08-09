@@ -1,0 +1,322 @@
+/* Custom CSS Variables */
+:root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-glass: rgba(30, 41, 59, 0.5);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --cyan: #06b6d4;
+    --purple: #8b5cf6;
+    --pink: #ec4899;
+    --green: #10b981;
+    --orange: #f59e0b;
+    --yellow: #eab308;
+}
+
+/* Base Styles */
+body {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, #581c87 50%, var(--bg-primary) 100%);
+    min-height: 100vh;
+    color: var(--text-primary);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Animated Background */
+body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
+    animation: float 20s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-20px, 20px) rotate(240deg); }
+}
+
+/* Navbar */
+.navbar {
+    background: rgba(15, 23, 42, 0.8) !important;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+/* Glass Effect Cards */
+.glass-card {
+    background: var(--bg-glass) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(148, 163, 184, 0.1) !important;
+    border-radius: 1rem !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.glass-card-purple {
+    background: rgba(139, 92, 246, 0.1) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(139, 92, 246, 0.3) !important;
+    border-radius: 1rem !important;
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+}
+
+/* Navigation Pills */
+.glass-nav {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 1rem;
+    padding: 0.5rem;
+}
+
+.glass-nav .nav-link {
+    color: var(--text-secondary);
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.glass-nav .nav-link.active {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    color: white;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+}
+
+/* Form Controls */
+.glass-select, .glass-input {
+    background: rgba(15, 23, 42, 0.5) !important;
+    border: 1px solid rgba(148, 163, 184, 0.2) !important;
+    color: var(--text-primary) !important;
+    border-radius: 0.75rem !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem !important;
+}
+
+.glass-select:focus, .glass-input:focus {
+    background: rgba(15, 23, 42, 0.7) !important;
+    border-color: var(--cyan) !important;
+    box-shadow: 0 0 0 0.2rem rgba(6, 182, 212, 0.25) !important;
+    color: var(--text-primary) !important;
+}
+
+.glass-select option {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+/* User Selection Buttons */
+.btn-user {
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    color: var(--text-secondary);
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.btn-user.active[data-user="pamolita"] {
+    background: linear-gradient(135deg, var(--pink), #be185d);
+    border-color: var(--pink);
+    color: white;
+    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+}
+
+.btn-user.active[data-user="ramiro"] {
+    background: linear-gradient(135deg, var(--cyan), #0891b2);
+    border-color: var(--cyan);
+    color: white;
+    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+}
+
+.user-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+/* Rating Grid */
+.rating-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 0.25rem;
+}
+
+.btn-rating {
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    color: var(--text-secondary);
+    border-radius: 0.5rem;
+    padding: 0.75rem 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    aspect-ratio: 1;
+}
+
+.btn-rating:hover {
+    background: rgba(148, 163, 184, 0.2);
+    border-color: rgba(148, 163, 184, 0.4);
+    color: var(--text-primary);
+}
+
+.rating-grid[data-category="entrada"] .btn-rating.active {
+    background: linear-gradient(135deg, var(--green), #059669);
+    border-color: var(--green);
+    color: white;
+}
+
+.rating-grid[data-category="main"] .btn-rating.active {
+    background: linear-gradient(135deg, var(--orange), #d97706);
+    border-color: var(--orange);
+    color: white;
+}
+
+.rating-grid[data-category="dessert"] .btn-rating.active {
+    background: linear-gradient(135deg, var(--purple), #7c3aed);
+    border-color: var(--purple);
+    color: white;
+}
+
+/* Gradient Elements */
+.gradient-text {
+    background: linear-gradient(135deg, var(--cyan), var(--purple), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.btn-gradient {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    border: none;
+    color: white;
+    font-weight: 600;
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+}
+
+.btn-gradient:hover {
+    background: linear-gradient(135deg, #7c3aed, #db2777);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.6);
+    color: white;
+}
+
+.btn-gradient:disabled {
+    background: rgba(148, 163, 184, 0.3);
+    color: rgba(248, 250, 252, 0.5);
+    box-shadow: none;
+    transform: none;
+}
+
+/* Color Classes */
+.text-cyan { color: var(--cyan) !important; }
+.text-purple { color: var(--purple) !important; }
+.text-pink { color: var(--pink) !important; }
+.text-green { color: var(--green) !important; }
+.text-orange { color: var(--orange) !important; }
+
+.bg-cyan { background-color: var(--cyan) !important; }
+.bg-purple { background-color: var(--purple) !important; }
+.bg-pink { background-color: var(--pink) !important; }
+
+/* Gradient Badges */
+.bg-gradient-green {
+    background: linear-gradient(135deg, var(--green), #059669) !important;
+}
+
+.bg-gradient-orange {
+    background: linear-gradient(135deg, var(--orange), #d97706) !important;
+}
+
+.bg-gradient-purple {
+    background: linear-gradient(135deg, var(--purple), #7c3aed) !important;
+}
+
+.bg-gradient-yellow {
+    background: linear-gradient(135deg, var(--yellow), #ca8a04) !important;
+}
+
+/* Ranking Cards */
+.ranking-card {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.ranking-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.ranking-card.pamolita {
+    border-color: rgba(236, 72, 153, 0.3);
+    background: rgba(236, 72, 153, 0.05);
+}
+
+.ranking-card.ramiro {
+    border-color: rgba(6, 182, 212, 0.3);
+    background: rgba(6, 182, 212, 0.05);
+}
+
+.ranking-card.global {
+    border-color: rgba(139, 92, 246, 0.3);
+    background: rgba(139, 92, 246, 0.05);
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+    .rating-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .btn-rating {
+        padding: 1rem 0.5rem;
+        font-size: 1rem;
+    }
+    
+    .display-4 {
+        font-size: 2.5rem !important;
+    }
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.animate-pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(30, 41, 59, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.5);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.7);
+}
